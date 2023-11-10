@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TeamProject"
         tools:targetApi="31">
-      
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -27,6 +27,9 @@
         <activity
             android:name=".ChatsActivity"
             android:exported="true" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
         <activity
             android:name=".SelectChatbotActivity"
             android:exported="false" />

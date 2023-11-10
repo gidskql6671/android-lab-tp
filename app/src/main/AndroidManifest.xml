@@ -28,10 +28,13 @@
             android:name=".ChatsActivity"
             android:exported="true" />
         <activity
-            android:name=".SignupActivity"
+            android:name=".LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".SelectChatbotActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupActivity"
             android:exported="false" />
     </application>
 

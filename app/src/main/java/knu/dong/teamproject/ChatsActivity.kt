@@ -1,6 +1,7 @@
 package knu.dong.teamproject
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import knu.dong.teamproject.adapter.ChatsAdapter
@@ -25,6 +26,10 @@ class ChatsActivity: AppCompatActivity() {
         )
 
         initRecyclerView()
+
+        binding.titleBar.btnBack.setOnClickListener{
+            onBackPressed()
+        }
     }
 
 

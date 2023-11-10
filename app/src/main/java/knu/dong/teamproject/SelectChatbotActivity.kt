@@ -3,6 +3,7 @@ package knu.dong.teamproject
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.AdapterView
 import knu.dong.teamproject.adapter.ChatbotListAdapter
 import knu.dong.teamproject.databinding.ActivitySelectChatbotBinding
@@ -31,5 +32,7 @@ class SelectChatbotActivity : AppCompatActivity() {
             val intent = Intent(this, ChatsActivity::class.java)
             startActivity(intent)
         }
+
+        binding.titleBar.btnBack.visibility = View.INVISIBLE
     }
 }

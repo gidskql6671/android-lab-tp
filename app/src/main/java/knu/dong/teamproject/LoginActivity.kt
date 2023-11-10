@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
+import android.view.View
 import knu.dong.teamproject.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -25,7 +26,10 @@ class LoginActivity : AppCompatActivity() {
             //로그인 로직 없이 바로 성공
             val intent = Intent(this, SelectChatbotActivity::class.java)
             startActivity(intent)
+            finish()
         }
+
+        binding.titleBar.btnBack.visibility = View.INVISIBLE
 
         initTextWatcher()
     }

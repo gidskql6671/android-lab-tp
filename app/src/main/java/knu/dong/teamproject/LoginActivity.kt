@@ -30,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.titleBar.btnBack.visibility = View.INVISIBLE
+        binding.titleBar.title.visibility = View.INVISIBLE
 
         initTextWatcher()
     }

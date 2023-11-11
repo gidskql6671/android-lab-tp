@@ -28,11 +28,14 @@ class SelectChatbotActivity : AppCompatActivity() {
         val adapter = ChatbotListAdapter(this, chatbotItemList)
         binding.listView.adapter = adapter
 
-        binding.listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
+        binding.listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             val intent = Intent(this, ChatsActivity::class.java)
+            intent.putExtra("chatbot", adapter.getItem(position))
+
             startActivity(intent)
         }
 
         binding.titleBar.btnBack.visibility = View.INVISIBLE
+        binding.titleBar.title.text = "챗봇 선택"
     }
 }

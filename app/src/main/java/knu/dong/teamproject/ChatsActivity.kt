@@ -5,8 +5,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import knu.dong.teamproject.adapter.ChatsAdapter
+import knu.dong.teamproject.common.getSerializable
 import knu.dong.teamproject.databinding.ActivityChatsBinding
 import knu.dong.teamproject.dto.Chat
+import knu.dong.teamproject.dto.Chatbot
 
 class ChatsActivity: AppCompatActivity() {
     private lateinit var binding: ActivityChatsBinding
@@ -17,6 +19,12 @@ class ChatsActivity: AppCompatActivity() {
 
         binding = ActivityChatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val chatbot = intent.getSerializable("chatbot", Chatbot::class.java)
+        if (chatbot == null) {
+            finish()
+            return
+        }
 
         chats.addAll(0,
             listOf(
@@ -30,6 +38,7 @@ class ChatsActivity: AppCompatActivity() {
         binding.titleBar.btnBack.setOnClickListener{
             onBackPressed()
         }
+        binding.titleBar.title.text = chatbot.name
     }
 
 

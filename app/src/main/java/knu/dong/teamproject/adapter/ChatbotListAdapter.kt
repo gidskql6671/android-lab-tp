@@ -13,7 +13,7 @@ class ChatbotListAdapter(val context: Context, val chatbotList: MutableList<Chat
         return chatbotList.size
     }
 
-    override fun getItem(position: Int): Any {
+    override fun getItem(position: Int): Chatbot {
         return chatbotList[position]
     }
 

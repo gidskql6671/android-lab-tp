@@ -6,6 +6,9 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import knu.dong.teamproject.adapter.ChatsAdapter
 import knu.dong.teamproject.common.HttpRequestHelper
 import knu.dong.teamproject.common.getSerializable
@@ -13,6 +16,8 @@ import knu.dong.teamproject.databinding.ActivityChatsBinding
 import knu.dong.teamproject.dto.Chat
 import knu.dong.teamproject.dto.Chatbot
 import knu.dong.teamproject.dto.GetChatsDto
+import knu.dong.teamproject.dto.SendChatReqDto
+import knu.dong.teamproject.dto.SendChatResDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -61,11 +66,12 @@ class ChatsActivity: AppCompatActivity(), CoroutineScope {
 
 
             chats.add(Chat(message, true))
-            chats.add(Chat("$message 받았음", false))
             binding.recyclerView.apply {
                 adapter?.notifyItemInserted(chats.size - 1)
                 smoothScrollToPosition(chats.size - 1)
             }
+
+            sendChat(chatbot, message)
         }
 
         getChatbotChats(chatbot, 1)
@@ -104,6 +110,22 @@ class ChatsActivity: AppCompatActivity(), CoroutineScope {
                 }
             }
 
+        }
+    }
+
+
+    private fun sendChat(chatbot: Chatbot, message: String) {
+        launch(Dispatchers.Main) {
+            val resChat = HttpRequestHelper(this@ChatsActivity).post("api/chatbots/chats", SendChatResDto::class.java) {
+                contentType(ContentType.Application.Json)
+                setBody(SendChatReqDto(chatbot.id, message))
+            }
+
+            chats.add(Chat(resChat?.reply ?: "다시 시도해주세요.", false))
+            binding.recyclerView.apply {
+                adapter?.notifyItemInserted(chats.size - 1)
+                smoothScrollToPosition(chats.size - 1)
+            }
         }
     }
 }

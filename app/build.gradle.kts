@@ -30,7 +30,7 @@ android {
                 "proguard-rules.pro"
             )
 
-            buildConfigField("String", "SERVER_URL", "\"http://knu-ai.koreacentral.cloudapp.azure.com:8080\"")
+            buildConfigField("String", "SERVER_URL", "\"http://knu-ai.koreacentral.cloudapp.azure.com:8090\"")
         }
     }
     compileOptions {

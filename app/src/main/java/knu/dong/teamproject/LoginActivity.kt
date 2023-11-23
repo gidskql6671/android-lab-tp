@@ -7,7 +7,16 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
 import android.view.View
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import knu.dong.teamproject.common.HttpRequestHelper
 import knu.dong.teamproject.databinding.ActivityLoginBinding
+import knu.dong.teamproject.dto.LoginRequestDto
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -23,10 +32,12 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.btnLogin.setOnClickListener {
-            //로그인 로직 없이 바로 성공
-            val intent = Intent(this, SelectChatbotActivity::class.java)
-            startActivity(intent)
-            finish()
+            val email = binding.editEmail.text.toString()
+            val password = binding.editPassword.text.toString()
+
+            CoroutineScope(Dispatchers.Main).launch {
+                login(email, password)
+            }
         }
 
         binding.titleBar.btnBack.visibility = View.INVISIBLE
@@ -34,6 +45,24 @@ class LoginActivity : AppCompatActivity() {
 
         initTextWatcher()
     }
+
+    private suspend fun login(email: String, password: String) {
+        if (validateLoginFormat(email, password)) {
+            val response = HttpRequestHelper(this).post("api/users/login") {
+                contentType(ContentType.Application.Json)
+                setBody(LoginRequestDto(email, password))
+            }
+
+            if (response?.status?.value?.div(100) == 2) {
+                withContext(Dispatchers.Main) {
+                    val intent = Intent(this@LoginActivity, SelectChatbotActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        }
+    }
+
 
     private fun initTextWatcher() {
         val textWatcher = object : TextWatcher {
@@ -57,5 +86,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun validateEmail(email: String): Boolean {
         return email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    private fun validateLoginFormat(email: String, password: String): Boolean {
+        return validateEmail(email) && validatePassword(password)
     }
 }

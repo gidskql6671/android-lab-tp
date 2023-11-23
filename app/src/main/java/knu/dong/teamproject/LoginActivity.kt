@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
 import android.view.View
+import android.widget.Toast
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
@@ -59,6 +60,9 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 }
+            }
+            else {
+                Toast.makeText(this, "존재하지 않는 계정입니다",Toast.LENGTH_SHORT).show()
             }
         }
     }

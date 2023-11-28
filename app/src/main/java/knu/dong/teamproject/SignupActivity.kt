@@ -7,12 +7,20 @@ import android.text.TextWatcher
 import android.util.Patterns
 import android.widget.Toast
 import knu.dong.teamproject.databinding.ActivitySignupBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlin.coroutines.CoroutineContext
 
-class SignupActivity : AppCompatActivity() {
+class SignupActivity : AppCompatActivity(), CoroutineScope {
+    private lateinit var job: Job
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        job = Job()
 
         binding.btnSignup.isEnabled = false
 
@@ -65,6 +73,11 @@ class SignupActivity : AppCompatActivity() {
         binding.titleBar.btnBack.setOnClickListener {
             onBackPressed()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
     private fun signUp(email: String, verifyCode: String, password: String) {
         // TODO: 추후 회원가입 요청 구현, 현재는 그냥 가입 완료 메시지만

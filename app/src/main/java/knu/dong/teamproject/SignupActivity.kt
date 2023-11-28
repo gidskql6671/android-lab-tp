@@ -61,6 +61,10 @@ class SignupActivity : AppCompatActivity() {
 
             signUp(email, verifyCode, password)
         }
+
+        binding.titleBar.btnBack.setOnClickListener {
+            onBackPressed()
+        }
     }
     private fun signUp(email: String, verifyCode: String, password: String) {
         // TODO: 추후 회원가입 요청 구현, 현재는 그냥 가입 완료 메시지만

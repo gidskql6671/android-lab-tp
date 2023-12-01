@@ -15,10 +15,6 @@ class SelectChatbotActivity : AppCompatActivity() {
         val binding = ActivitySelectChatbotBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        binding.listView.setOnItemClickListener {
-//            val intent = Intent(this, ChatsActivity::class.java)
-//            startActivity(intent)
-//        }
 
         //임시 데이터 입력
         val chatbotItemList = mutableListOf<Chatbot>()

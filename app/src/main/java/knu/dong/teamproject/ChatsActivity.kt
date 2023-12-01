@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.socket.emitter.Emitter
 import knu.dong.teamproject.adapter.ChatsAdapter
 import knu.dong.teamproject.common.HttpRequestHelper
+import knu.dong.teamproject.common.WebSocketHelper
 import knu.dong.teamproject.common.getSerializable
 import knu.dong.teamproject.databinding.ActivityChatsBinding
 import knu.dong.teamproject.dto.Chat
@@ -18,6 +22,7 @@ import knu.dong.teamproject.dto.Chatbot
 import knu.dong.teamproject.dto.GetChatsDto
 import knu.dong.teamproject.dto.SendChatReqDto
 import knu.dong.teamproject.dto.SendChatResDto
+import knu.dong.teamproject.dto.SendChatUsingSocketReqDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -71,7 +76,8 @@ class ChatsActivity: AppCompatActivity(), CoroutineScope {
                 smoothScrollToPosition(chats.size - 1)
             }
 
-            sendChat(chatbot, message)
+//            sendChat(chatbot, message)
+            sendChatUsingSocket(chatbot, 1, message)
         }
 
         getChatbotChats(chatbot, 1)
@@ -124,6 +130,64 @@ class ChatsActivity: AppCompatActivity(), CoroutineScope {
             chats.add(Chat(resChat?.reply ?: "다시 시도해주세요.", false))
             binding.recyclerView.apply {
                 adapter?.notifyItemInserted(chats.size - 1)
+                smoothScrollToPosition(chats.size - 1)
+            }
+        }
+    }
+
+    private var isFirst = true
+    private fun sendChatUsingSocket(chatbot: Chatbot, userId: Long, message: String) {
+        launch(Dispatchers.Main) {
+            try {
+                val socket = WebSocketHelper().socket
+                socket.connect()
+
+                val chatbotId = chatbot.id
+                socket.on("error", onErrorMessage)
+                socket.on("chats/messages/$chatbotId", onChatbotMessage)
+
+                isFirst = true
+                val sendData = Gson().toJson(SendChatUsingSocketReqDto(chatbotId, userId, message))
+                socket.emit("chats/messages", sendData)
+            }catch (err: Exception) {
+                Log.d("dong", err.stackTraceToString())
+            }
+        }
+    }
+
+    private val onChatbotMessage = Emitter.Listener { args ->
+        launch(Dispatchers.Main) {
+            if (isFirst) {
+                chats.add(Chat(args[0].toString(), false))
+                binding.recyclerView.apply {
+                    adapter?.notifyItemInserted(chats.size - 1)
+                    smoothScrollToPosition(chats.size - 1)
+                }
+                isFirst = false
+
+                return@launch
+            }
+            if (args[0].toString().isEmpty()) {
+                binding.recyclerView.smoothScrollToPosition(chats.size - 1)
+
+                return@launch
+            }
+
+            chats[chats.size - 1].message += args[0]
+            binding.recyclerView.adapter?.notifyItemChanged(chats.size - 1)
+        }
+    }
+
+
+    private val onErrorMessage = Emitter.Listener { args ->
+        launch(Dispatchers.Main) {
+            val msg = args[0].toString()
+            Log.e("dong", msg)
+
+            Toast.makeText(this@ChatsActivity, msg, Toast.LENGTH_SHORT).show()
+            chats.removeLast()
+            binding.recyclerView.apply {
+                adapter?.notifyItemRemoved(chats.size)
                 smoothScrollToPosition(chats.size - 1)
             }
         }

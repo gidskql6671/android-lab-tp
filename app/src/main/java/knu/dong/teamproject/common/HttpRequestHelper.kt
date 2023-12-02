@@ -24,7 +24,9 @@ class HttpRequestHelper(context: Context) {
         install(ContentNegotiation) {
             json()
         }
-        install(HttpCookies)
+        install(HttpCookies) {
+            storage = FileCookieStorage(context)
+        }
     }
     private val TAG = "HttpRequestHelper"
     private val domain: String = BuildConfig.SERVER_URL

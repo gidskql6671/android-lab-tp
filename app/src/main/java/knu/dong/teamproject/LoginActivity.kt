@@ -1,6 +1,7 @@
 package knu.dong.teamproject
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -8,12 +9,15 @@ import android.text.TextWatcher
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.edit
+import io.ktor.client.call.body
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import knu.dong.teamproject.common.HttpRequestHelper
 import knu.dong.teamproject.databinding.ActivityLoginBinding
 import knu.dong.teamproject.dto.LoginRequestDto
+import knu.dong.teamproject.dto.LoginResponseDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,11 +25,15 @@ import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var userInfo: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        userInfo = getSharedPreferences("user_info", MODE_PRIVATE)
+
 
         binding.textSignup.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)
@@ -55,6 +63,12 @@ class LoginActivity : AppCompatActivity() {
             }
 
             if (response?.status?.value?.div(100) == 2) {
+                val user: LoginResponseDto = response.body()
+
+                userInfo.edit {
+                    putLong("id", user.id)
+                }
+
                 withContext(Dispatchers.Main) {
                     val intent = Intent(this@LoginActivity, SelectChatbotActivity::class.java)
                     startActivity(intent)

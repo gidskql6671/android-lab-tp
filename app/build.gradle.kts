@@ -21,6 +21,8 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "SERVER_URL", "\"http://knu-ai.koreacentral.cloudapp.azure.com:8090\"")
+            buildConfigField("String", "WEBSOCKET_HOST", "\"http://knu-ai.koreacentral.cloudapp.azure.com\"")
+            buildConfigField("int", "WEBSOCKET_PORT", "8091")
         }
 
         release {
@@ -31,6 +33,8 @@ android {
             )
 
             buildConfigField("String", "SERVER_URL", "\"http://knu-ai.koreacentral.cloudapp.azure.com:8090\"")
+            buildConfigField("String", "WEBSOCKET_HOST", "\"http://knu-ai.koreacentral.cloudapp.azure.com\"")
+            buildConfigField("int", "WEBSOCKET_PORT", "8091")
         }
     }
     compileOptions {
@@ -48,7 +52,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.recyclerview:recyclerview:1.3.1")
@@ -58,6 +61,9 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:2.3.3")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.3")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.3")
+    implementation("io.socket:socket.io-client:2.1.0") {
+        exclude(group = "org.json", module = "json")
+    }
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
     implementation("com.google.code.gson:gson:2.8.9")

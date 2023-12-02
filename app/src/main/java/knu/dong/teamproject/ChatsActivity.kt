@@ -1,5 +1,6 @@
 package knu.dong.teamproject
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -34,7 +35,7 @@ class ChatsActivity: AppCompatActivity(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
     private lateinit var binding: ActivityChatsBinding
-    private lateinit var chatbot: Chatbot
+    private lateinit var userInfo: SharedPreferences
     private val chats = mutableListOf<Chat>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,8 +44,10 @@ class ChatsActivity: AppCompatActivity(), CoroutineScope {
         binding = ActivityChatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         job = Job()
+        userInfo = getSharedPreferences("user_info", MODE_PRIVATE)
 
-        chatbot = intent.getSerializable("chatbot", Chatbot::class.java)
+        val userId = userInfo.getLong("id", -1)
+        val chatbot = intent.getSerializable("chatbot", Chatbot::class.java)
             ?: run {
                 finish()
                 return
@@ -77,10 +80,10 @@ class ChatsActivity: AppCompatActivity(), CoroutineScope {
             }
 
 //            sendChat(chatbot, message)
-            sendChatUsingSocket(chatbot, 1, message)
+            sendChatUsingSocket(chatbot, userId, message)
         }
 
-        getChatbotChats(chatbot, 1)
+        getChatbotChats(chatbot, userId)
     }
 
     override fun onDestroy() {

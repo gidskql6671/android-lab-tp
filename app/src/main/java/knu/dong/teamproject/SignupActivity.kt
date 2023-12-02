@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
+import android.view.View
 import android.widget.Toast
 import knu.dong.teamproject.databinding.ActivitySignupBinding
 
@@ -61,6 +62,10 @@ class SignupActivity : AppCompatActivity() {
 
             signUp(email, verifyCode, password)
         }
+
+        binding.titleBar.btnBack.visibility = View.INVISIBLE
+        binding.titleBar.title.visibility = View.INVISIBLE
+        binding.titleBar.btnAccount.visibility = View.INVISIBLE
     }
     private fun signUp(email: String, verifyCode: String, password: String) {
         // TODO: 추후 회원가입 요청 구현, 현재는 그냥 가입 완료 메시지만

@@ -96,12 +96,12 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
                     contentType(ContentType.Application.Json)
                     setBody(Signup(email, verify.toInt(), password))
                 }
-            if (result?.status == HttpStatusCode.OK) {
+            if (result?.status == HttpStatusCode.Created) {
                 Toast.makeText(this@SignupActivity, "성공적으로 회원가입 되었습니다.", Toast.LENGTH_SHORT).show()
                 finish()
             }
             else {
-                Log.d("chae", "오류코드: ${result?.status}, 오류메시지: ${result?.toString()}")
+//                Log.d("chae", "오류코드: ${result?.status}, 오류메시지: ${result?.toString()}")
                 Toast.makeText(this@SignupActivity, "회원가입 요청이 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         }

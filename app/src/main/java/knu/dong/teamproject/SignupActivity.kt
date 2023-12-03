@@ -13,6 +13,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import knu.dong.teamproject.common.HttpRequestHelper
 import knu.dong.teamproject.databinding.ActivitySignupBinding
+import knu.dong.teamproject.dto.EmailVerify
 import knu.dong.teamproject.dto.Signup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -100,7 +101,7 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
                 finish()
             }
             else {
-                Log.d("chae", "오류코드: ${result?.status}")
+                Log.d("chae", "오류코드: ${result?.status}, 오류메시지: ${result?.toString()}")
                 Toast.makeText(this@SignupActivity, "회원가입 요청이 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         }
@@ -118,7 +119,21 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
         confirmPassword.isNotBlank() && password == confirmPassword
 
     private fun verifyEmail(email: String) {
-        // TODO: 추후 이메일 인증 구현
+        launch(Dispatchers.Main) {
+            val resSendVerify = HttpRequestHelper(this@SignupActivity)
+                .post("api/users/sendVerifyEmail") {
+                    contentType(ContentType.Application.Json)
+                    setBody(EmailVerify(email))
+                }
+            if (resSendVerify?.status == HttpStatusCode.Created) {
+                Toast.makeText(this@SignupActivity, "인증 코드를 입력하신 이메일로 발송했습니다.",
+                    Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(this@SignupActivity, "인증 코드 전송이 실패했습니다.",
+                    Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 

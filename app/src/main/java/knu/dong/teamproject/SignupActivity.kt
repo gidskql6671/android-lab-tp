@@ -4,12 +4,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import knu.dong.teamproject.common.HttpRequestHelper
 import knu.dong.teamproject.databinding.ActivitySignupBinding
+import knu.dong.teamproject.dto.Signup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class SignupActivity : AppCompatActivity(), CoroutineScope {
@@ -79,15 +87,22 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
         super.onDestroy()
         job.cancel()
     }
-    private fun signUp(email: String, verifyCode: String, password: String) {
-        // TODO: 추후 회원가입 요청 구현, 현재는 그냥 가입 완료 메시지만
-        val result = true
-        if (result) {
-            Toast.makeText(this@SignupActivity, "성공적으로 회원가입 되었습니다.", Toast.LENGTH_SHORT).show()
-            finish()
-        }
-        else {
-            Toast.makeText(this@SignupActivity, "회원가입 요청이 실패했습니다.", Toast.LENGTH_SHORT).show()
+    private fun signUp(email: String, verify: String, password: String) {
+        launch(Dispatchers.Main) {
+            val result = HttpRequestHelper(this@SignupActivity)
+                .post("api/users")
+                {
+                    contentType(ContentType.Application.Json)
+                    setBody(Signup(email, verify.toInt(), password))
+                }
+            if (result?.status == HttpStatusCode.OK) {
+                Toast.makeText(this@SignupActivity, "성공적으로 회원가입 되었습니다.", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            else {
+                Log.d("chae", "오류코드: ${result?.status}")
+                Toast.makeText(this@SignupActivity, "회원가입 요청이 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
     private fun isValidEmail(email: String) =

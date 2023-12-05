@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
+import android.view.View
 import android.widget.Toast
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -23,11 +24,12 @@ import kotlin.coroutines.CoroutineContext
 
 class SignupActivity : AppCompatActivity(), CoroutineScope {
     private lateinit var job: Job
+    private lateinit var binding: ActivitySignupBinding
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivitySignupBinding.inflate(layoutInflater)
+        binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
         job = Job()
 
@@ -48,11 +50,30 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
                 val password = binding.password.text.toString()
                 val confirmPassword = binding.passwordVerify.text.toString()
 
-                val isAllFieldValid = isValidPassword(email)
-                        && isValidVerifyCode(verifyCode)
-                        && isValidPassword(password)
+                val isEmailValid = isValidEmail(email)
+                val isVerifyCodeValid = isValidVerifyCode(verifyCode)
+                val isPasswordValid = isValidPassword(password)
                         && isValidConfirmPassword(password, confirmPassword)
-                binding.btnSignup.isEnabled = isAllFieldValid
+
+                if (!isEmailValid) {
+                    binding.errorTextView.text = "올바른 이메일 형식이 아닙니다."
+                    binding.errorTextView.visibility = View.VISIBLE
+                }
+                else if (!isVerifyCodeValid) {
+                    binding.errorTextView.text = "올바른 인증코드 형식이 아닙니다."
+                    binding.errorTextView.visibility = View.VISIBLE
+                }
+                else if (!isPasswordValid) {
+                    binding.errorTextView.text = "비밀번호가 일치하지 않습니다."
+                    binding.errorTextView.visibility = View.VISIBLE
+                }
+                val isAllFieldValid = isEmailValid
+                        && isVerifyCodeValid
+                        && isPasswordValid
+                if (isAllFieldValid) {
+                    binding.errorTextView.visibility = View.INVISIBLE
+                    binding.btnSignup.isEnabled = isAllFieldValid
+                }
             }
         }
         binding.email.addTextChangedListener(signupFormWatcher)
@@ -103,10 +124,14 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
                 }
                 HttpStatusCode.Unauthorized -> {
                     Log.d("chae", "오류코드: ${result?.status}, 오류메시지: ${result?.toString()}")
+                    binding.errorTextView.text = "인증 코드 혹은 이메일 주소 오류"
+                    binding.errorTextView.visibility = View.VISIBLE
                     Toast.makeText(this@SignupActivity, "인증 코드 혹은 이메일 주소를 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
                     Log.d("chae", "오류코드: ${result?.status}, 오류메시지: ${result?.toString()}")
+                    binding.errorTextView.text = "회원 가입 서버 오류"
+                    binding.errorTextView.visibility = View.VISIBLE
                     Toast.makeText(this@SignupActivity, "회원가입 요청이 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }

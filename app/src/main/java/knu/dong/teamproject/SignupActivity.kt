@@ -101,7 +101,7 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
                 finish()
             }
             else {
-//                Log.d("chae", "오류코드: ${result?.status}, 오류메시지: ${result?.toString()}")
+                Log.d("chae", "오류코드: ${result?.status}, 오류메시지: ${result?.toString()}")
                 Toast.makeText(this@SignupActivity, "회원가입 요청이 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         }

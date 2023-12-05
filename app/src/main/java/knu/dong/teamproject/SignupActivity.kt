@@ -110,7 +110,7 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
         email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
     private fun isValidVerifyCode(verifyCode: String) =
-        verifyCode.isNotBlank()
+        verifyCode.isNotBlank() && verifyCode.length == 6 && verifyCode.all { it.isDigit() }
 
     private fun isValidPassword(password: String) =
         password.isNotBlank()

@@ -101,7 +101,10 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
                     Toast.makeText(this@SignupActivity, "성공적으로 회원가입 되었습니다.", Toast.LENGTH_SHORT).show()
                     finish()
                 }
-                HttpStatusCode.Unauthorized -> Toast.makeText(this@SignupActivity, "인증 코드가 틀렸습니다.", Toast.LENGTH_SHORT).show()
+                HttpStatusCode.Unauthorized -> {
+                    Log.d("chae", "오류코드: ${result?.status}, 오류메시지: ${result?.toString()}")
+                    Toast.makeText(this@SignupActivity, "인증 코드 혹은 이메일 주소를 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
+                }
                 else -> {
                     Log.d("chae", "오류코드: ${result?.status}, 오류메시지: ${result?.toString()}")
                     Toast.makeText(this@SignupActivity, "회원가입 요청이 실패했습니다.", Toast.LENGTH_SHORT).show()

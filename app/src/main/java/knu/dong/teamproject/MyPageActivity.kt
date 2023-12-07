@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.core.content.edit
 import knu.dong.teamproject.common.HttpRequestHelper
 import knu.dong.teamproject.databinding.ActivityMyPageBinding
@@ -49,5 +50,7 @@ class MyPageActivity : AppCompatActivity() {
 
         val intent: Intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
+
+        ActivityCompat.finishAffinity(this)
     }
 }

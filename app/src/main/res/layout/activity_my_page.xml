@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="16dp"
                     android:padding="15dp"
-                    android:text="사용가능한 챗봇 : "/>
+                    android:text="채팅 사용량 : "/>
                 <TextView
                     android:id="@+id/rateLimit"
                     android:layout_width="wrap_content"

@@ -1,5 +1,6 @@
 package knu.dong.teamproject
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -57,6 +58,11 @@ class ChatsActivity: AppCompatActivity(), CoroutineScope {
             onBackPressed()
         }
         binding.titleBar.title.text = chatbot.name
+        binding.titleBar.btnAccount.setOnClickListener {
+            val intent = Intent(this, MyPageActivity::class.java)
+
+            startActivity(intent)
+        }
 
         initRecyclerView()
 

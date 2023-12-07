@@ -33,5 +33,10 @@ class SelectChatbotActivity : AppCompatActivity() {
 
         binding.titleBar.btnBack.visibility = View.INVISIBLE
         binding.titleBar.title.text = "챗봇 선택"
+        binding.titleBar.btnAccount.setOnClickListener {
+            val intent = Intent(this, MyPageActivity::class.java)
+
+            startActivity(intent)
+        }
     }
 }

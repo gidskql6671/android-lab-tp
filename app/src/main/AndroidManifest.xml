@@ -15,7 +15,9 @@
         android:theme="@style/Theme.TeamProject"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name=".MyPageActivity"
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="true">

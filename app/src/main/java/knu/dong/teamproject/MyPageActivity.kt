@@ -7,6 +7,7 @@ import android.view.View
 import androidx.core.content.edit
 import knu.dong.teamproject.common.HttpRequestHelper
 import knu.dong.teamproject.databinding.ActivityMyPageBinding
+import knu.dong.teamproject.dto.UserInfoDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,6 +29,14 @@ class MyPageActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.Main).launch {
                 logout()
             }
+        }
+        val sharedUserInfo = getSharedPreferences("user_info", MODE_PRIVATE)
+
+        val userId = sharedUserInfo.getLong("id", -1)
+        CoroutineScope(Dispatchers.Main).launch {
+            var userInfo = HttpRequestHelper(this@MyPageActivity).get("api/users", UserInfoDto::class.java)
+            binding.userEmail.text = userInfo?.email
+            binding.rateLimit.text = "${userInfo?.currentUsedCount} / ${userInfo?.rateLimit}"
         }
     }
 

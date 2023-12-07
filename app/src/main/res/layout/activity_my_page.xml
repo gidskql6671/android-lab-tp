@@ -17,13 +17,14 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:src="@drawable/baseline_account_circle_24"
-            android:background="@color/black"/>
+            android:background="@color/primary"/>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/userEmail"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -31,13 +32,23 @@
                 android:text="로그인된 유저 Email"
                 android:textStyle="bold"
                 android:textSize="20dp"/>
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:textSize="16dp"
-                android:padding="15dp"
-                android:text="사용가능 : 10 / 10"/>
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:padding="15dp"
+                    android:text="사용가능한 챗봇 : "/>
+                <TextView
+                    android:id="@+id/rateLimit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10/10"/>
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -47,9 +58,9 @@
         android:layout_height="60dp"
         android:orientation="horizontal"
         android:gravity="right"
-        android:padding="10dp">
-
+        android:paddingRight="10dp">
         <Button
+            android:id="@+id/btnLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="로그아웃" />

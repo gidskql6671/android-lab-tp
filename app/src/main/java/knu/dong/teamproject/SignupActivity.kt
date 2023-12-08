@@ -97,6 +97,7 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
         binding.titleBar.btnBack.setOnClickListener {
             onBackPressed()
         }
+        binding.titleBar.title.text = getString(R.string.activity_signup_title)
     }
 
     override fun onDestroy() {

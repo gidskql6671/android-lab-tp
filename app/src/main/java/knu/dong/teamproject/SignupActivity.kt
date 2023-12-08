@@ -46,7 +46,7 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
 
             override fun afterTextChanged(p0: Editable?) {
                 val email = binding.email.text.toString()
-                val verifyCode = binding.emailVerify.text.toString()
+                val verifyCode = binding.verifyCode.text.toString()
                 val password = binding.password.text.toString()
                 val confirmPassword = binding.passwordVerify.text.toString()
 
@@ -71,7 +71,7 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
             }
         }
         binding.email.addTextChangedListener(signupFormWatcher)
-        binding.emailVerify.addTextChangedListener(signupFormWatcher)
+        binding.verifyCode.addTextChangedListener(signupFormWatcher)
         binding.password.addTextChangedListener(signupFormWatcher)
         binding.passwordVerify.addTextChangedListener(signupFormWatcher)
 
@@ -88,7 +88,7 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
 
         binding.btnSignup.setOnClickListener {
             val email = binding.email.text.toString()
-            val verifyCode = binding.emailVerify.text.toString()
+            val verifyCode = binding.verifyCode.text.toString()
             val password = binding.password.text.toString()
 
             signUp(email, verifyCode, password)

@@ -52,28 +52,22 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
 
                 val isEmailValid = isValidEmail(email)
                 val isVerifyCodeValid = isValidVerifyCode(verifyCode)
-                val isPasswordValid = isValidPassword(password)
-                        && isValidConfirmPassword(password, confirmPassword)
+                val isPasswordValid =
+                    isValidPassword(password) && isValidConfirmPassword(password, confirmPassword)
 
-                if (!isEmailValid) {
-                    binding.errorTextView.text = "올바른 이메일 형식이 아닙니다."
-                    binding.errorTextView.visibility = View.VISIBLE
+                val errorMessage = when {
+                    !isEmailValid -> "올바른 이메일 형식이 아닙니다."
+                    !isVerifyCodeValid -> "올바른 인증코드 형식이 아닙니다."
+                    !isPasswordValid -> "비밀번호가 일치하지 않습니다."
+                    else -> null // 폼의 모든 필드의 입력 값이 올바른 경우
                 }
-                else if (!isVerifyCodeValid) {
-                    binding.errorTextView.text = "올바른 인증코드 형식이 아닙니다."
-                    binding.errorTextView.visibility = View.VISIBLE
-                }
-                else if (!isPasswordValid) {
-                    binding.errorTextView.text = "비밀번호가 일치하지 않습니다."
-                    binding.errorTextView.visibility = View.VISIBLE
-                }
-                val isAllFieldValid = isEmailValid
-                        && isVerifyCodeValid
-                        && isPasswordValid
-                if (isAllFieldValid) {
-                    binding.errorTextView.visibility = View.INVISIBLE
-                    binding.btnSignup.isEnabled = isAllFieldValid
-                }
+
+                binding.errorTextView.text = errorMessage
+                binding.errorTextView.visibility =
+                    if (errorMessage != null) View.VISIBLE else View.INVISIBLE
+
+                val isAllFieldValid = isEmailValid && isVerifyCodeValid && isPasswordValid
+                binding.btnSignup.isEnabled = isAllFieldValid
             }
         }
         binding.email.addTextChangedListener(signupFormWatcher)

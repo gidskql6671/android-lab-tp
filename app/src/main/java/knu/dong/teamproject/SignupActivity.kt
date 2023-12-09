@@ -93,7 +93,7 @@ class SignupActivity : AppCompatActivity(), CoroutineScope {
 
             signUp(email, verifyCode, password)
         }
-
+        
         binding.titleBar.btnBack.setOnClickListener {
             onBackPressed()
         }
